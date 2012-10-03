@@ -19,6 +19,13 @@ Feel free to clarify anything in the problem description.
 import sys
 import queue
 
+def main():
+    if len(sys.argv) == 3:
+        M, N = sys.argv[1], sys.argv[2]
+        print "Unique paths in a %s x %s matrix: %s" % (M, N, count_paths(int(M), int(N)))
+    else:
+        print "Unique paths in a 4 x 4 matrix: %s" % count_paths(4, 4)
+
 # Solves the above problem for a general case M x N grid using BFS
 def count_paths(m, n):
     num_paths = 0
@@ -35,12 +42,15 @@ def count_paths(m, n):
             continue
         path.append(state)
         
-        if state == (m-1, n-1):
+        if state == (m-1,n-1):
             num_paths += 1
             
         for new_state in get_next_states(state, m, n):
             fringe.push((new_state, path[:]))
-            
+    
+    if m == n: 
+        num_paths *= 2
+        
     return num_paths
             
 # Helper function
@@ -49,15 +59,14 @@ def get_next_states(state, m, n):
     states = []
     x, y = state[0], state[1]
     
-    for nextx, nexty in [(x+1, y), (x-1, y), (x, y+1), (x, y-1)]:
-        if nextx >= 0 and nexty >= 0 and nextx < m and nexty < n:
-            states.append((nextx, nexty))
+    if state == (0,0) and m == n:
+        states.append((1,0))
+    else:
+        for nextx, nexty in [(x+1,y), (x-1,y), (x,y+1), (x,y-1)]:
+            if nextx >= 0 and nexty >= 0 and nextx < m and nexty < n:
+                states.append((nextx, nexty))
         
     return states
  
-
-if len(sys.argv) == 3:
-    M, N = sys.argv[1], sys.argv[2]
-    print "Unique paths in a %s x %s matrix: %s" % (M, N, count_paths(int(M), int(N)))
-else:
-    print "Unique paths in a 4 x 4 matrix: %s" % count_paths(4, 4)
+if __name__ == "__main__":
+    main()
